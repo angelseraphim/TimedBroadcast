@@ -1,19 +1,21 @@
-﻿using Exiled.API.Features;
-using MEC;
-using System.Collections.Generic;
-
-namespace TimedBroadcast
+﻿namespace TimedBroadcast
 {
-    public class Coroutines
+    using System.Collections.Generic;
+
+    using Exiled.API.Features;
+
+    using MEC;
+
+    internal static class Coroutines
     {
-        public IEnumerator<float> TimedBroadcast(Constructor broadcast)
+        internal static IEnumerator<float> TimedBroadcasts(TimedBroadcasts timedBroadcasts)
         {
-            while (!Round.IsEnded)
+            while (true)
             {
-                yield return Timing.WaitForSeconds(broadcast.Interval);
-                Map.Broadcast(broadcast.Duration, broadcast.Text);
+                yield return Timing.WaitForSeconds(timedBroadcasts.Interval);
+
+                Map.Broadcast(timedBroadcasts.Duration, timedBroadcasts.Text);
             }
-            yield break;
         }
     }
 }

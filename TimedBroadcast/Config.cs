@@ -1,14 +1,23 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using Exiled.API.Interfaces;
-
-namespace TimedBroadcast
+﻿namespace TimedBroadcast
 {
+    using System.ComponentModel;
+
+    using Exiled.API.Interfaces;
+
     public class Config : IConfig
     {
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = false;
-        [Description("Interval - Time after which the broadcast is repeated")]
-        public List<Constructor> TimedBroadcasts { get; set; } = new List<Constructor>() { new Constructor(300, 10, "This server using Timedbroadcasts :3"), new Constructor(400, 10, "Something") };
+
+        [Description("On player join broadcast")]
+        public ushort Duration { get; set; } = 10;
+        public string Text { get; set; } = "Привет!";
+
+        [Description("Timed broadcasts")]
+        public TimedBroadcasts[] TimedBroadcasts { get; set; } = new TimedBroadcasts[]
+        {
+            new TimedBroadcasts(300, 5, "Заходите к нас в Discord!"),
+            new TimedBroadcasts(600, 10, "Приходите к нам на админку!!!")
+        };
     }
 }

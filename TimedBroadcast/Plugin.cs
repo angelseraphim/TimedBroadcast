@@ -1,52 +1,60 @@
-﻿using Exiled.API.Features;
-using MEC;
-using System.Collections.Generic;
-
-namespace TimedBroadcast
+﻿namespace TimedBroadcast
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Exiled.API.Features;
+
+    using MEC;
+
+    using TimedBroadcast.EventHandlers;
+
     public class Plugin : Plugin<Config>
     {
-        public override string Prefix => "TimedBroadcast";
-        public override string Name => "TimedBroadcast";
         public override string Author => "angelseraphim.";
+        public override string Name => "TimedBroadcast";
+        public override string Prefix => "TimedBroadcast";
+        public override Version Version => new Version(2, 0, 0);
 
-        private readonly List<CoroutineHandle> CoroutineList = new List<CoroutineHandle>();
+        internal static readonly HashSet<CoroutineHandle> Coroutines = new HashSet<CoroutineHandle>();
 
-        public static Plugin plugin;
-        public static Coroutines coroutines;
+        internal static Config config;
+
+        private PlayerEvents playerEvents;
+        private ServerEvents serverEvents;
 
         public override void OnEnabled()
         {
-            plugin = this;
-            coroutines = new Coroutines();
+            config = Config;
 
-            Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
-            Exiled.Events.Handlers.Server.RestartingRound += OnRestartingRound;
+            playerEvents = new PlayerEvents();
+            serverEvents = new ServerEvents();
+
+            playerEvents.Register();
+            serverEvents.Register();
+
             base.OnEnabled();
         }
+
         public override void OnDisabled()
         {
-            plugin = null;
-            coroutines = null;
+            config = null;
 
-            Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
-            Exiled.Events.Handlers.Server.RestartingRound -= OnRestartingRound;
+            playerEvents.UnRegister();
+            serverEvents.UnRegister();
+
+            playerEvents = null;
+            serverEvents = null;
+
             base.OnDisabled();
         }
-        private void OnRestartingRound()
+
+        public override void OnReloaded()
         {
-            foreach (CoroutineHandle coroutine in CoroutineList)
-            {
-                Timing.KillCoroutines(coroutine);
-            }
-            CoroutineList.Clear();
-        }
-        private void OnRoundStarted()
-        {
-            foreach (Constructor broadcasts in Config.TimedBroadcasts)
-            {
-                CoroutineList.Add(Timing.RunCoroutine(coroutines.TimedBroadcast(broadcasts)));
-            }
+            OnDisabled();
+            OnEnabled();
+
+            base.OnReloaded();
         }
     }
 }

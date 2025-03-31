@@ -96,8 +96,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="Constructor.cs" />
     <Compile Include="Coroutines.cs" />
+    <Compile Include="EventHandlers\PlayerEvents.cs" />
+    <Compile Include="EventHandlers\ServerEvents.cs" />
+    <Compile Include="TimedBroadcast.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
